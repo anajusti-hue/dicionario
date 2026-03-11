@@ -1,0 +1,90 @@
+:root {
+    --primary-color: #444;
+    --bg-color: #f8f9fa;
+    --white: #ffffff;
+}
+
+.tema-portugues { --primary-color: #0056b3; }
+.tema-matematica { --primary-color: #b30000; }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* LISTA DE TERMOS E CARDS */
+.lista-termos {
+    margin-top: 30px;
+}
+
+.card-termo {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    border-left: 8px solid var(--primary-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.card-termo h2 {
+    margin: 10px 0;
+    color: #222;
+}
+
+.card-termo p {
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* BOTÕES */
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.btn:hover { opacity: 0.8; transform: translateY(-2px); }
+
+/* ALFABETO */
+.alfabeto {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0;
+}
+
+.letra {
+    padding: 10px 15px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.letra:hover { background: var(--primary-color); color: white; }
