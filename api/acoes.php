@@ -10,20 +10,27 @@ if (!isset($_SESSION['professor_logado'])) {
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $acao = isset($_GET['acao']) ? $_GET['acao'] : '';
-$id_professor = $_SESSION['professor_id']; // Pega o ID da sessão
+$id_professor = $_SESSION['professor_id']; 
 $msg = "";
 
 if ($id > 0) {
     if ($acao == 'aprovar') {
-        // AJUSTE: Agora preenche também quem foi o professor que validou
         $sql = "UPDATE termos SET status = 'aprovado', id_professor_validador = '$id_professor' WHERE id = $id";
         if ($conn->query($sql)) {
             $msg = "Termo aprovado com sucesso!";
         }
-    } elseif ($acao == 'excluir') {
+    } 
+    elseif ($acao == 'pendente') {
+        // Nova lógica: Volta o termo para análise e remove quem validou
+        $sql = "UPDATE termos SET status = 'pendente', id_professor_validador = NULL WHERE id = $id";
+        if ($conn->query($sql)) {
+            $msg = "Termo movido para pendentes!";
+        }
+    }
+    elseif ($acao == 'excluir') {
         $sql = "DELETE FROM termos WHERE id = $id";
         if ($conn->query($sql)) {
-            $msg = "Termo excluído!";
+            $msg = "Termo excluído permanentemente!";
         }
     }
 } else {

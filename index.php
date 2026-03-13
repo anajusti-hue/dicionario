@@ -1,25 +1,17 @@
 <?php 
-// 1. Conexão com o banco (Pasta config)
+// 1. Conexão com o banco
 include 'config/conexao.php'; 
 
-// 2. Captura dos filtros da URL
+// 2. Captura dos filtros
 $busca = isset($_GET['busca']) ? $_GET['busca'] : '';
 $filtro_letra = isset($_GET['letra']) ? $_GET['letra'] : '';
 $filtro_disciplina = isset($_GET['disciplina']) ? $_GET['disciplina'] : '';
 
-// 3. Construção da Query SQL Dinâmica
+// 3. Query Dinâmica
 $query = "SELECT * FROM termos WHERE status = 'aprovado'";
-
-if (!empty($busca)) { 
-    $query .= " AND (termo LIKE '%$busca%' OR definicao LIKE '%$busca%')"; 
-}
-if (!empty($filtro_letra)) { 
-    $query .= " AND termo LIKE '$filtro_letra%'"; 
-}
-if (!empty($filtro_disciplina)) { 
-    $query .= " AND disciplina = '$filtro_disciplina'"; 
-}
-
+if (!empty($busca)) { $query .= " AND (termo LIKE '%$busca%' OR definicao LIKE '%$busca%')"; }
+if (!empty($filtro_letra)) { $query .= " AND termo LIKE '$filtro_letra%'"; }
+if (!empty($filtro_disciplina)) { $query .= " AND disciplina = '$filtro_disciplina'"; }
 $query .= " ORDER BY termo ASC";
 $result = $conn->query($query);
 ?>
@@ -29,87 +21,204 @@ $result = $conn->query($query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Dicionário SESI - Nivelamento</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Dicionário Técnico SESI</title>
     <style>
-        .header-sesi { background: #333; color: white; padding: 40px 0; border-bottom: 5px solid #d32f2f; }
-        /* Estilo para separar visualmente as matérias */
-        .card-portugues { border-left: 8px solid #0056b3; }
-        .card-matematica { border-left: 8px solid #b30000; }
-        .letra-btn { min-width: 40px; margin: 2px; }
-        .img-termo { width: 150px; height: 150px; object-fit: cover; border-radius: 8px; }
+        :root {
+            /* PALETA EMERALD & SLATE */
+            --primary: #10b981; /* Verde Esmeralda */
+            --primary-dark: #064e3b; /* Verde Floresta Profundo */
+            --accent: #334155; /* Cinza Ardósia */
+            --bg-body: #f1f5f9;
+            --text-dark: #0f172a;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-dark);
+        }
+
+        /* Hero Section - Elegante e Sóbrio */
+        .hero-section {
+            padding: 80px 0;
+            background-color: var(--primary-dark);
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 32px 32px;
+            color: white;
+            border-radius: 0 0 40px 40px;
+            text-align: center;
+        }
+
+        .search-container {
+            background: white;
+            padding: 8px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+
+        .form-control-custom {
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            width: 100%;
+            outline: none;
+            background: transparent;
+        }
+
+        /* Botões de Filtro de Disciplina */
+        .btn-filter {
+            transition: 0.3s;
+            font-weight: 700;
+            border: 2px solid transparent;
+            background: white;
+            color: var(--accent);
+        }
+        
+        .btn-active-all { background: var(--primary) !important; color: white !important; }
+        .btn-active-port { background: #2563eb !important; color: white !important; }
+        .btn-active-mat { background: #e11d48 !important; color: white !important; }
+
+        /* Alfabeto */
+        .alphabet-filter {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 40px 0;
+        }
+        .letter-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: white;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            transition: 0.2s;
+        }
+        .letter-btn:hover, .letter-btn.active { 
+            background: var(--primary-dark); 
+            color: white; 
+            border-color: var(--primary-dark);
+        }
+
+        /* Cards de Termos */
+        .term-card {
+            background: white;
+            border: none;
+            border-radius: 24px;
+            padding: 25px;
+            transition: 0.4s;
+            height: 100%;
+            border-bottom: 4px solid transparent;
+        }
+        .term-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 30px rgba(0,0,0,0.05);
+            border-bottom-color: var(--primary);
+        }
+        
+        .img-container { width: 100%; height: 180px; border-radius: 18px; overflow: hidden; margin-bottom: 18px; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .badge-disc { padding: 6px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: inline-block; }
+        .bg-port { background: #eff6ff; color: #2563eb; }
+        .bg-mat { background: #fff1f2; color: #e11d48; }
+
+        .btn-sugerir {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+        .btn-sugerir:hover { background: #059669; transform: scale(1.05); color: white; }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-<header class="header-sesi text-center mb-4 shadow">
-    <h1 class="display-4 fw-bold">Dicionário de Termos Técnicos</h1>
-    <p class="lead">Garantindo o entendimento de todos os alunos SESI</p>
-</header>
-
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <div class="d-flex gap-2">
-            <a href="index.php?disciplina=portugues" class="btn btn-primary rounded-pill px-4 shadow-sm">📚 Português</a>
-            <a href="index.php?disciplina=matematica" class="btn btn-danger rounded-pill px-4 shadow-sm">🔢 Matemática</a>
-            <a href="index.php" class="btn btn-secondary rounded-pill shadow-sm">Ver Todos</a>
+<section class="hero-section">
+    <div class="container">
+        <h1 class="fw-800 display-4">Dicionário Técnico</h1>
+        <p class="opacity-75 fs-5">A sua base de conhecimento para Português e Matemática</p>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="search-container">
+                    <form action="index.php" method="GET" class="d-flex align-items-center">
+                        <input type="text" name="busca" class="form-control-custom" placeholder="O que deseja pesquisar?" value="<?php echo $busca; ?>">
+                        <button type="submit" class="btn px-4 py-2 rounded-pill me-1 fw-bold" style="background: var(--primary-dark); color: white;">Buscar</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <a href="cadastrar.php" class="btn btn-success rounded-pill px-4 shadow-sm fw-bold">+ Sugerir Termo</a>
+        <a href="cadastrar.php" class="btn-sugerir shadow">+ Sugerir Termo</a>
+    </div>
+</section>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-center flex-wrap gap-3 mb-4">
+        <a href="index.php" class="btn btn-filter shadow-sm px-4 py-2 rounded-pill <?php echo empty($filtro_disciplina) ? 'btn-active-all' : ''; ?>">
+            📚 Todos
+        </a>
+        <a href="index.php?disciplina=portugues" class="btn btn-filter shadow-sm px-4 py-2 rounded-pill <?php echo $filtro_disciplina == 'portugues' ? 'btn-active-port' : ''; ?>" style="border-color: #2563eb33;">
+            📖 Português
+        </a>
+        <a href="index.php?disciplina=matematica" class="btn btn-filter shadow-sm px-4 py-2 rounded-pill <?php echo $filtro_disciplina == 'matematica' ? 'btn-active-mat' : ''; ?>" style="border-color: #e11d4833;">
+            📐 Matemática
+        </a>
     </div>
 
-    <form class="row g-2 mb-4" method="GET">
-        <div class="col-md-10">
-            <input type="text" name="busca" class="form-control form-control-lg rounded-pill shadow-sm" placeholder="O que você quer aprender hoje?" value="<?php echo htmlspecialchars($busca); ?>">
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill shadow-sm">Buscar</button>
-        </div>
-    </form>
-
-    <div class="text-center mb-4">
-        <?php foreach (range('A', 'Z') as $char): ?>
-            <a href="index.php?letra=<?php echo $char; ?><?php echo $filtro_disciplina ? "&disciplina=$filtro_disciplina" : ""; ?>" 
-               class="btn btn-outline-secondary btn-sm letra-btn <?php echo $filtro_letra == $char ? 'active' : ''; ?>">
-               <?php echo $char; ?>
+    <div class="alphabet-filter">
+        <?php foreach (range('A', 'Z') as $l): ?>
+            <a href="index.php?letra=<?php echo $l; ?>&disciplina=<?php echo $filtro_disciplina; ?>" 
+               class="letter-btn shadow-sm <?php echo ($filtro_letra == $l) ? 'active' : ''; ?>">
+               <?php echo $l; ?>
             </a>
         <?php endforeach; ?>
     </div>
 
-    <div class="row">
-        <?php if ($result && $result->num_rows > 0): ?>
+    <div class="row g-4">
+        <?php if ($result->num_rows > 0): ?>
             <?php while($row = $result->fetch_assoc()): ?>
-                <div class="col-12 mb-3">
-                    <div class="card shadow-sm <?php echo $row['disciplina'] == 'portugues' ? 'card-portugues' : 'card-matematica'; ?> border-0">
-                        <div class="card-body d-flex gap-4 align-items-center flex-wrap flex-md-nowrap">
-                            
-                            <?php if(!empty($row['imagem_url'])): ?>
-                                <img src="<?php echo $row['imagem_url']; ?>" alt="Imagem do termo" class="img-termo shadow-sm">
-                            <?php endif; ?>
-
-                            <div class="flex-grow-1">
-                                <span class="badge <?php echo $row['disciplina'] == 'portugues' ? 'bg-primary' : 'bg-danger'; ?> mb-2">
-                                    <?php echo ucfirst($row['disciplina']); ?>
-                                </span>
-                                <h2 class="card-title fw-bold text-dark h3"><?php echo htmlspecialchars($row['termo']); ?></h2>
-                                <p class="card-text text-muted fs-5 mt-2"><?php echo htmlspecialchars($row['definicao']); ?></p>
+                <div class="col-md-4">
+                    <div class="term-card shadow-sm">
+                        <?php if(!empty($row['imagem_url'])): ?>
+                            <div class="img-container">
+                                <img src="<?php echo $row['imagem_url']; ?>" alt="Termo Técnico">
                             </div>
-                            
-                        </div>
+                        <?php endif; ?>
+                        
+                        <span class="badge-disc <?php echo $row['disciplina'] == 'portugues' ? 'bg-port' : 'bg-mat'; ?>">
+                            <?php echo $row['disciplina']; ?>
+                        </span>
+                        
+                        <h3 class="fw-bold h4 mb-2 text-dark"><?php echo htmlspecialchars($row['termo']); ?></h3>
+                        <p class="text-muted small mb-0"><?php echo htmlspecialchars($row['definicao']); ?></p>
                     </div>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>
-            <div class="alert alert-warning text-center shadow-sm py-4">
-                <h4>Ops! Nenhum termo encontrado.</h4>
-                <p class="mb-0">Tente outra palavra ou verifique os filtros acima.</p>
+            <div class="col-12 text-center py-5">
+                <h4 class="text-muted">Nenhum termo encontrado para esta seleção.</h4>
             </div>
         <?php endif; ?>
     </div>
 </div>
 
-<footer class="text-center py-5 mt-5 border-top bg-white">
-    <a href="login.php" class="text-decoration-none text-primary small">Entrar na Área do Professor</a>
-    <p class="text-muted mb-1 small">&copy; 2026 Ana Clara e Nicolas - Dicionário de termos Técnicos</p>
-   
+<footer class="py-5 mt-5 text-center bg-white border-top">
+    <p class="text-muted small mb-1">© Ana Clara e Nicolas 2026 - Projeto Educativo SESI</p>
+    <a href="login.php" class="text-decoration-none fw-bold" style="color: var(--primary-dark);">Área do Professor</a>
 </footer>
 
 </body>
