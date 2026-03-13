@@ -1,20 +1,21 @@
 <?php
 session_start();
-// AJUSTE: O login está na raiz, a conexão está na pasta config
 include 'config/conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nif = $_POST['nif'];
-    $senha = $_POST['senha'];
+    $nif = $conn->real_escape_string($_POST['nif']);
+    $senha = $_POST['senha']; // Nota: O ideal seria usar password_verify se a senha estivesse em hash
 
-    // Consulta para verificar o professor
+    // Consulta atualizada para a sua nova tabela
     $sql = "SELECT * FROM professores WHERE nif = '$nif' AND senha = '$senha'";
     $result = $conn->query($sql);
 
     if ($result && $result->num_rows > 0) {
+        $dados = $result->fetch_assoc();
         $_SESSION['professor_logado'] = true;
-        $_SESSION['professor_nif'] = $nif;
-        header("Location: selecao.php"); // Manda para a página de seleção
+        $_SESSION['professor_id'] = $dados['id'];
+        $_SESSION['professor_nome'] = $dados['nome'];
+        header("Location: selecao.php"); 
         exit();
     } else {
         $erro = "NIF ou Senha inválidos!";
@@ -29,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Login Professor - SESI</title>
     <style>
-        /* CSS para centralizar tudo no meio da tela */
         body {
             height: 100vh;
             display: flex;
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .card-login {
             width: 100%;
             max-width: 380px;
-            border-radius: 20px; /* Bordas fofinhas */
+            border-radius: 20px;
             border: none;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
@@ -53,11 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-weight: bold;
             transition: 0.3s;
         }
-        
-        .form-control {
-            border-radius: 10px;
-            padding: 10px 15px;
-        }
+        .form-control { border-radius: 10px; padding: 10px 15px; }
     </style>
 </head>
 <body>
@@ -84,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="password" name="senha" class="form-control" placeholder="••••••••" required>
             </div>
 
-            <button type="submit" class="btn btn-entrar bs-success btn-success w-100 shadow-sm">Entrar no Painel</button>
+            <button type="submit" class="btn btn-entrar btn-success w-100 shadow-sm text-white">Entrar no Painel</button>
             
             <a href="index.php" class="d-block mt-3 text-decoration-none text-muted small">
                 ← Voltar ao Dicionário

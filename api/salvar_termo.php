@@ -1,19 +1,26 @@
 <?php
-// AJUSTE: ../ sai da pasta 'api' e entra na 'config'
 include '../config/conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Escapa caracteres especiais para evitar erros no SQL
     $termo = $conn->real_escape_string($_POST['termo']);
     $disciplina = $conn->real_escape_string($_POST['disciplina']);
     $definicao = $conn->real_escape_string($_POST['definicao']);
     
-    // Opcional: caso você use imagens, senão deixe vazio
-    $imagem = isset($_POST['imagem_url']) ? $conn->real_escape_string($_POST['imagem_url']) : '';
+    $caminho_imagem = null;
 
-    // Insere como 'pendente' para o professor validar depois
+    // Lógica para processar o upload da imagem
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === 0) {
+        $extensao = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+        $novo_nome = md5(uniqid()) . "." . $extensao; // Nome aleatório para o ficheiro
+        $diretorio_destino = "../uploads/" . $novo_nome;
+
+        if (move_uploaded_file($_FILES['foto']['tmp_name'], $diretorio_destino)) {
+            $caminho_imagem = "uploads/" . $novo_nome; // Caminho guardado no banco
+        }
+    }
+
     $sql = "INSERT INTO termos (termo, definicao, disciplina, imagem_url, status) 
-            VALUES ('$termo', '$definicao', '$disciplina', '$imagem', 'pendente')";
+            VALUES ('$termo', '$definicao', '$disciplina', '$caminho_imagem', 'pendente')";
 
     if ($conn->query($sql) === TRUE) {
         echo "<script>

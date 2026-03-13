@@ -1,20 +1,26 @@
 <?php
-// AJUSTE: ../ sai da pasta 'api' e entra na 'config' para achar o banco
+session_start();
 include '../config/conexao.php';
+
+// Segurança: Verifica se há um professor logado
+if (!isset($_SESSION['professor_logado'])) {
+    header("Location: ../login.php");
+    exit();
+}
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $acao = isset($_GET['acao']) ? $_GET['acao'] : '';
+$id_professor = $_SESSION['professor_id']; // Pega o ID da sessão
 $msg = "";
 
 if ($id > 0) {
     if ($acao == 'aprovar') {
-        // Muda o status para aprovado para aparecer na index.php
-        $sql = "UPDATE termos SET status = 'aprovado' WHERE id = $id";
+        // AJUSTE: Agora preenche também quem foi o professor que validou
+        $sql = "UPDATE termos SET status = 'aprovado', id_professor_validador = '$id_professor' WHERE id = $id";
         if ($conn->query($sql)) {
             $msg = "Termo aprovado com sucesso!";
         }
     } elseif ($acao == 'excluir') {
-        // Deleta o registro do banco
         $sql = "DELETE FROM termos WHERE id = $id";
         if ($conn->query($sql)) {
             $msg = "Termo excluído!";
@@ -24,7 +30,6 @@ if ($id > 0) {
     $msg = "Erro: ID inválido.";
 }
 
-// Retorna para a página onde o professor estava (admin.php) com um alerta
 echo "<script>
     alert('$msg');
     window.location.href = '" . $_SERVER['HTTP_REFERER'] . "';
