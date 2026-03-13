@@ -48,7 +48,7 @@ $aba = isset($_GET['aba']) ? $_GET['aba'] : 'pendente';
                 Pendentes
             </a>
             <a href="admin.php?materia=<?php echo $materia; ?>&aba=aprovado" class="btn <?php echo $aba == 'aprovado' ? 'btn-dark' : 'btn-outline-dark'; ?>">
-                Já Postados (Excluir Errados)
+                Já Postados 
             </a>
         </div>
     </div>
