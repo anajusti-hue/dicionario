@@ -1,15 +1,14 @@
 <?php 
 session_start();
-// Segurança: Só entra no painel se o professor estiver logado
 if (!isset($_SESSION['professor_logado'])) {
     header("Location: login.php");
     exit();
 }
-
-// O admin está na raiz, então entra na pasta config para achar o banco
 include 'config/conexao.php'; 
 
 $materia = isset($_GET['materia']) ? $_GET['materia'] : 'portugues';
+// NOVA LÓGICA: Verifica se o professor quer ver os pendentes ou os já postados
+$aba = isset($_GET['aba']) ? $_GET['aba'] : 'pendente'; 
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -17,88 +16,75 @@ $materia = isset($_GET['materia']) ? $_GET['materia'] : 'portugues';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Painel de Validação SESI</title>
+    <title>Painel SESI - <?php echo ucfirst($materia); ?></title>
     <script>
-        function confirmarAprovacao(id) {
-            if (confirm("Deseja APROVAR este termo? Ele aparecerá na página inicial.")) {
-                window.location.href = './api/acoes.php?acao=aprovar&id=' + id;
-            }
-        }
-        function confirmarExclusao(id) {
-            if (confirm("Tem certeza que deseja EXCLUIR este termo?")) {
-                window.location.href = './api/acoes.php?acao=excluir&id=' + id;
+        function confirmarAcao(id, acao) {
+            let msg = acao === 'aprovar' ? "Deseja APROVAR este termo?" : "Deseja EXCLUIR este termo permanentemente?";
+            if (confirm(msg)) {
+                window.location.href = './api/acoes.php?acao=' + acao + '&id=' + id;
             }
         }
     </script>
     <style>
-        /* Estilo base do Header */
-        .header-sesi { padding: 20px 0; border-bottom: 5px solid rgba(0,0,0,0.2); color: white; }
-        
-        /* AJUSTE: Cores dinâmicas para a NAV baseadas na matéria */
-        .nav-portugues { background-color: #0056b3 !important; } /* Azul para Português */
-        .nav-matematica { background-color: #b30000 !important; } /* Vermelho para Matemática */
-
-        .card-termo { border-left: 8px solid #444; margin-bottom: 15px; transition: 0.3s; border-radius: 15px; }
-        .tema-portugues .card-termo { border-left-color: #0056b3; }
-        .tema-matematica .card-termo { border-left-color: #b30000; }
-        
-        .img-preview {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-right: 20px;
-            border: 1px solid #ddd;
-        }
+        .header-sesi { padding: 20px 0; color: white; border-bottom: 5px solid rgba(0,0,0,0.2); }
+        .nav-portugues { background-color: #0056b3 !important; }
+        .nav-matematica { background-color: #b30000 !important; }
+        .card-termo { border-radius: 15px; margin-bottom: 15px; border: none; }
+        .img-preview { width: 70px; height: 70px; object-fit: cover; border-radius: 10px; margin-right: 15px; }
     </style>
 </head>
-<body class="bg-light tema-<?php echo $materia; ?>">
+<body class="bg-light">
 
 <header class="header-sesi text-center mb-4 shadow nav-<?php echo $materia; ?>">
-    <h1 class="fw-bold">Validação: <?php echo ucfirst($materia); ?></h1>
+    <h1 class="fw-bold">Gestão: <?php echo ucfirst($materia); ?></h1>
 </header>
 
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="selecao.php" class="btn btn-secondary shadow-sm">← Voltar para Seleção</a>
-        <span class="text-muted small">Professor(a): <strong><?php echo $_SESSION['professor_nome'] ?? 'Logado'; ?></strong></span>
+    <div class="d-flex justify-content-between mb-4">
+        <a href="selecao.php" class="btn btn-secondary">← Voltar</a>
+        
+        <div class="btn-group">
+            <a href="admin.php?materia=<?php echo $materia; ?>&aba=pendente" class="btn <?php echo $aba == 'pendente' ? 'btn-dark' : 'btn-outline-dark'; ?>">
+                Pendentes
+            </a>
+            <a href="admin.php?materia=<?php echo $materia; ?>&aba=aprovado" class="btn <?php echo $aba == 'aprovado' ? 'btn-dark' : 'btn-outline-dark'; ?>">
+                Já Postados (Excluir Errados)
+            </a>
+        </div>
     </div>
 
     <?php
-    if (isset($conn)) {
-        $sql = "SELECT * FROM termos WHERE status = 'pendente' AND disciplina = '$materia' ORDER BY id DESC";
-        $result = $conn->query($sql);
+    // Busca termos baseados na aba selecionada (pendente ou aprovado)
+    $sql = "SELECT * FROM termos WHERE status = '$aba' AND disciplina = '$materia' ORDER BY termo ASC";
+    $result = $conn->query($sql);
 
-        if ($result && $result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                ?>
-                <div class="card card-termo shadow-sm border-0">
-                    <div class="card-body d-flex align-items-center">
-                        
-                        <?php if(!empty($row['imagem_url'])): ?>
-                            <img src="<?php echo $row['imagem_url']; ?>" alt="Preview" class="img-preview shadow-sm">
-                        <?php else: ?>
-                            <div class="img-preview d-flex align-items-center justify-content-center bg-secondary text-white small">
-                                Sem imagem
-                            </div>
+    if ($result && $result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            ?>
+            <div class="card card-termo shadow-sm">
+                <div class="card-body d-flex align-items-center">
+                    <?php if(!empty($row['imagem_url'])): ?>
+                        <img src="<?php echo $row['imagem_url']; ?>" class="img-preview">
+                    <?php endif; ?>
+
+                    <div class="flex-grow-1">
+                        <h5 class="fw-bold mb-0"><?php echo htmlspecialchars($row['termo']); ?></h5>
+                        <p class="text-muted small mb-0"><?php echo htmlspecialchars($row['definicao']); ?></p>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <?php if($aba == 'pendente'): ?>
+                            <button onclick="confirmarAcao(<?php echo $row['id']; ?>, 'aprovar')" class="btn btn-success">Aprovar</button>
                         <?php endif; ?>
-
-                        <div class="flex-grow-1">
-                            <h4 class="fw-bold mb-1"><?php echo htmlspecialchars($row['termo']); ?></h4>
-                            <p class="text-muted mb-0 small"><?php echo htmlspecialchars($row['definicao']); ?></p>
-                        </div>
-
-                        <div class="d-flex gap-2 ms-3">
-                            <button onclick="confirmarAprovacao(<?php echo $row['id']; ?>)" class="btn btn-success px-4 shadow-sm">Aprovar</button>
-                            <button onclick="confirmarExclusao(<?php echo $row['id']; ?>)" class="btn btn-outline-danger shadow-sm">Excluir</button>
-                        </div>
+                        
+                        <button onclick="confirmarAcao(<?php echo $row['id']; ?>, 'excluir')" class="btn btn-outline-danger">Excluir</button>
                     </div>
                 </div>
-                <?php
-            }
-        } else {
-            echo "<div class='alert alert-info text-center shadow-sm py-4'>Nenhum termo pendente para " . ucfirst($materia) . ".</div>";
+            </div>
+            <?php
         }
+    } else {
+        echo "<div class='alert alert-secondary text-center'>Nenhum termo encontrado nesta categoria.</div>";
     }
     ?>
 </div>
