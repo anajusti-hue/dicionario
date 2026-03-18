@@ -28,7 +28,7 @@ $result = $conn->query($query);
     <style>
         :root {
             /* PALETA ULTRA-MODERNA FIXA (CLARA) */
-            --primary: #10b981; 
+            --primary: #10b981;
             --primary-dark: #064e3b; 
             --accent: #1e293b; 
             --bg-body: #f8fafc; 
@@ -103,14 +103,20 @@ $result = $conn->query($query);
         }
         
         .btn-filter:hover { 
-            background: #f1f5f9; 
+            background: #f1f5f9;
             transform: translateY(-2px); 
             box-shadow: 0 8px 15px rgba(0,0,0,0.05);
         }
         
-        .btn-active-all { background: linear-gradient(135deg, var(--primary) 0%, #059669 100%) !important; color: white !important; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3) !important; border: none; }
-        .btn-active-port { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; color: white !important; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3) !important; border: none; }
-        .btn-active-mat { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; color: white !important; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3) !important; border: none; }
+        .btn-active-all { background: linear-gradient(135deg, var(--primary) 0%, #059669 100%) !important;
+            color: white !important; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3) !important; border: none;
+        }
+        .btn-active-port { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; color: white !important;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3) !important; border: none;
+        }
+        .btn-active-mat { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; color: white !important;
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3) !important; border: none;
+        }
 
         /* Alfabeto Estilizado */
         .alphabet-filter {
@@ -161,13 +167,13 @@ $result = $conn->query($query);
         }
         
         .term-card:hover { 
-            transform: translateY(-12px); 
+            transform: translateY(-12px);
             box-shadow: 0 30px 60px rgba(0,0,0,0.08) !important; 
             border-color: rgba(16, 185, 129, 0.1);
         } 
         
         .img-container { 
-            width: 100%; 
+            width: 100%;
             height: 220px; 
             border-radius: 16px; 
             overflow: hidden; 
@@ -177,7 +183,7 @@ $result = $conn->query($query);
         } 
         
         .img-container img { 
-            width: 100%; 
+            width: 100%;
             height: 100%; 
             object-fit: cover; 
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -188,21 +194,23 @@ $result = $conn->query($query);
         }
         
         .badge-disc { 
-            padding: 8px 16px; 
+            padding: 8px 16px;
             border-radius: 10px; 
             font-size: 0.75rem; 
             font-weight: 800; 
             text-transform: uppercase; 
             letter-spacing: 0.5px;
             margin-bottom: 15px; 
-            display: inline-block; 
+            display: inline-block;
         } 
         
-        .bg-port { background: #eff6ff; color: #2563eb; } 
-        .bg-mat { background: #fef2f2; color: #dc2626; } 
+        .bg-port { background: #eff6ff;
+            color: #2563eb; } 
+        .bg-mat { background: #fef2f2; color: #dc2626;
+        } 
         
         .btn-sugerir { 
-            display: inline-block; 
+            display: inline-block;
             margin-top: 30px; 
             padding: 14px 30px;
             background: rgba(255,255,255,0.1);
@@ -228,8 +236,10 @@ $result = $conn->query($query);
         /* ------------------------------------------- */
         
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0;
+                transform: translateY(30px) scale(0.98); }
+            to { opacity: 1;
+                transform: translateY(0) scale(1); }
         }
 
         .modal.show .modal-dialog {
@@ -271,7 +281,7 @@ $result = $conn->query($query);
         }
         
         .modal-close-custom:hover {
-            background: #ef4444; 
+            background: #ef4444;
             color: white;
             border-color: #ef4444;
             transform: scale(1.15) rotate(90deg); 
@@ -329,8 +339,10 @@ $result = $conn->query($query);
             align-items: center;
         }
 
-        .bg-port-modal { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; } 
-        .bg-mat-modal { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .bg-port-modal { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;
+        } 
+        .bg-mat-modal { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;
+        }
 
         .definition-container {
             background: #f8fafc;
@@ -344,7 +356,7 @@ $result = $conn->query($query);
         }
 
         .definition-container::before {
-            content: "\F6B0"; 
+            content: "\F6B0";
             font-family: "bootstrap-icons";
             position: absolute;
             top: -10px;
@@ -361,17 +373,60 @@ $result = $conn->query($query);
             z-index: 1;
         }
 
+        /* Botão Acesso Professor no Topo */
+        .admin-link-top {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .admin-link-top:hover {
+            background: white;
+            color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        /* Ajuste para não quebrar em telas de celulares */
+        @media (max-width: 768px) {
+            .admin-link-top {
+                top: 15px;
+                right: 15px;
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+        }
+
     </style>
 </head>
 <body>
 
 <div class="hero-section">
+    <a href="login.php" class="admin-link-top">
+        <i class="bi bi-shield-lock-fill"></i> Área do Professor
+    </a>
+
     <div class="container" style="max-width: 850px;">
         <h1 class="fw-bold" style="font-size: 3.5rem; letter-spacing: -2px;">Dicionário SESI</h1>
         <p class="fs-5 opacity-75 mb-3">Explore e aprenda os termos técnicos da nossa escola</p>
         
         <form method="GET" class="search-container">
             <input type="text" name="busca" class="form-control-custom" placeholder="Pesquise por uma palavra..." value="<?php echo htmlspecialchars($busca); ?>">
+            
             <button type="submit" class="btn rounded-4 px-4 fw-bold shadow-sm" style="background: var(--primary); border: none; color: white; font-weight: 800; font-size: 1.1rem;"><i class="bi bi-search"></i> Buscar</button>
         </form>
 
@@ -382,9 +437,12 @@ $result = $conn->query($query);
 <div class="container py-5 mt-4" style="max-width: 1200px;">
     
     <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
-        <a href="index.php" class="btn-filter <?php echo empty($filtro_disciplina) ? 'btn-active-all' : ''; ?>"><i class="bi bi-grid-fill"></i> Todas as Matérias</a>
-        <a href="index.php?disciplina=portugues" class="btn-filter <?php echo $filtro_disciplina == 'portugues' ? 'btn-active-port' : ''; ?>"><i class="bi bi-book-half"></i> Português</a>
-        <a href="index.php?disciplina=matematica" class="btn-filter <?php echo $filtro_disciplina == 'matematica' ? 'btn-active-mat' : ''; ?>"><i class="bi bi-calculator-fill"></i> Matemática</a>
+        <a href="index.php" class="btn-filter <?php echo empty($filtro_disciplina) ?
+            'btn-active-all' : ''; ?>"><i class="bi bi-grid-fill"></i> Todas as Matérias</a>
+        <a href="index.php?disciplina=portugues" class="btn-filter <?php echo $filtro_disciplina == 'portugues' ?
+            'btn-active-port' : ''; ?>"><i class="bi bi-book-half"></i> Português</a>
+        <a href="index.php?disciplina=matematica" class="btn-filter <?php echo $filtro_disciplina == 'matematica' ?
+            'btn-active-mat' : ''; ?>"><i class="bi bi-calculator-fill"></i> Matemática</a>
     </div>
 
     <div class="alphabet-filter">
@@ -394,10 +452,12 @@ $result = $conn->query($query);
             $ativo = ($filtro_letra == $letra) ? 'active' : '';
             $url = "index.php?letra=$letra";
             if (!empty($filtro_disciplina)) $url .= "&disciplina=$filtro_disciplina";
+    
             echo "<a href='$url' class='$ativo'>$letra</a>";
         }
         ?>
-        <a href="index.php" class="text-danger" style="background: #fef2f2; border: 1px solid #fecaca;"><i class="bi bi-x-lg"></i></a>
+        <a href="index.php" class="text-danger" style="background: #fef2f2;
+            border: 1px solid #fecaca;"><i class="bi bi-x-lg"></i></a>
     </div>
 
     <div class="row g-4 mt-2">
@@ -405,33 +465,39 @@ $result = $conn->query($query);
             <?php while($row = $result->fetch_assoc()): ?>
                 <div class="col-md-6 col-lg-4 col-xl-4 mb-3">
                     
-                    <div class="term-card" data-bs-toggle="modal" data-bs-target="#modalDetalhes<?php echo $row['id']; ?>">
+                    <div class="term-card" data-bs-toggle="modal" data-bs-target="#modalDetalhes<?php echo $row['id'];
+                        ?>">
                         
                         <?php if(!empty($row['imagem_url'])): ?>
                             <div class="img-container">
-                                <img src="<?php echo $row['imagem_url']; ?>" alt="Imagem do termo">
+                                <img src="<?php echo $row['imagem_url'];
+                                    ?>" alt="Imagem do termo">
                             </div>
                         <?php endif; ?>
                         
                         <div>
-                            <span class="badge-disc <?php echo $row['disciplina'] == 'portugues' ? 'bg-port' : 'bg-mat'; ?>">
+                            <span class="badge-disc <?php echo $row['disciplina'] == 'portugues' ?
+                                'bg-port' : 'bg-mat'; ?>">
                                 <?php echo ucfirst($row['disciplina']); ?>
                             </span>
                         </div>
-                        
+          
                         <h3 class="fw-bold h4 mb-2 text-dark" style="letter-spacing: -1px;"><?php echo htmlspecialchars($row['termo']); ?></h3>
                         
-                        <p class="text-muted small mb-3" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; font-size: 0.95rem;">
+                        <p class="text-muted small mb-3" style="display: 
+                            -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; font-size: 0.95rem;">
                             <?php echo htmlspecialchars($row['definicao']); ?>
                         </p>
 
                         <div class="mt-auto text-end pt-3" style="border-top: 1px solid rgba(0,0,0,0.05);">
-                            <span class="fw-bold" style="color: var(--primary); font-size: 0.95rem;">Ver detalhes <i class="bi bi-arrow-right ms-1"></i></span>
+                            <span class="fw-bold" style="color: var(--primary);
+                                font-size: 0.95rem;">Ver detalhes <i class="bi bi-arrow-right ms-1"></i></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="modal fade" id="modalDetalhes<?php echo $row['id']; ?>" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="modalDetalhes<?php echo $row['id'];
+                    ?>" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-xl">
                         <div class="modal-content">
                             <button type="button" class="modal-close-custom" data-bs-dismiss="modal" aria-label="Close">
@@ -442,14 +508,17 @@ $result = $conn->query($query);
                                 
                                 <?php if(!empty($row['imagem_url'])): ?>
                                     <div class="modal-img-wrapper">
-                                        <img src="<?php echo $row['imagem_url']; ?>" alt="Imagem do termo">
+                                        <img src="<?php echo $row['imagem_url'];
+                                            ?>" alt="Imagem do termo">
                                     </div>
                                 <?php endif; ?>
-                                
+                           
                                 <div class="modal-content-inner">
                                     <div class="mb-3">
-                                        <span class="badge-modal <?php echo $row['disciplina'] == 'portugues' ? 'bg-port-modal' : 'bg-mat-modal'; ?>">
-                                            <i class="bi <?php echo $row['disciplina'] == 'portugues' ? 'bi-book-half' : 'bi-calculator-fill'; ?> me-2"></i>
+                                        <span class="badge-modal <?php echo $row['disciplina'] == 'portugues' ?
+                                            'bg-port-modal' : 'bg-mat-modal'; ?>">
+                                            <i class="bi <?php echo $row['disciplina'] == 'portugues' ?
+                                                'bi-book-half' : 'bi-calculator-fill'; ?> me-2"></i>
                                             <?php echo ucfirst($row['disciplina']); ?>
                                         </span>
                                     </div>
@@ -460,7 +529,8 @@ $result = $conn->query($query);
                                         <h4 class="fw-bold text-dark mb-3">
                                             <i class="bi bi-chat-square-quote-fill text-primary me-2"></i> Significado
                                         </h4>
-                                        <p class="text-secondary fs-5 m-0" style="line-height: 1.8; font-weight: 500;">
+                                        <p class="text-secondary fs-5 m-0" style="line-height: 1.8;
+                                            font-weight: 500;">
                                             <?php echo nl2br(htmlspecialchars($row['definicao'])); ?>
                                         </p>
                                     </div>
@@ -472,13 +542,17 @@ $result = $conn->query($query);
                 </div>
 
             <?php endwhile; ?>
-        <?php else: ?>
+        <?php else: 
+            ?>
             <div class="col-12 text-center py-5">
-                <div class="p-5 bg-white rounded-5 shadow-sm" style="max-width: 550px; margin: auto; border: 1px solid rgba(0,0,0,0.03);">
-                    <i class="bi bi-search text-muted mb-4" style="font-size: 4rem; opacity: 0.3;"></i>
+                <div class="p-5 bg-white rounded-5 shadow-sm" style="max-width: 550px;
+                    margin: auto; border: 1px solid rgba(0,0,0,0.03);">
+                    <i class="bi bi-search text-muted mb-4" style="font-size: 4rem;
+                        opacity: 0.3;"></i>
                     <h4 class="fw-bold text-dark" style="letter-spacing: -1px;">Nenhuma palavra encontrada</h4>
                     <p class="text-muted mb-4 fs-5">Tente buscar por outro termo ou remova os filtros.</p>
-                    <a href="index.php" class="btn btn-primary fw-bold rounded-pill px-4 py-2" style="background: var(--primary); border: none;">Voltar para o início</a>
+                    <a href="index.php" class="btn btn-primary fw-bold rounded-pill px-4 py-2" style="background: var(--primary);
+                        border: none;">Voltar para o início</a>
                 </div>
             </div>
         <?php endif; ?>
@@ -489,7 +563,6 @@ $result = $conn->query($query);
     <div class="container" style="max-width: 600px;">
         <p class="text-muted mb-3 fw-bold fs-5">© <?php echo date('Y'); ?> Ana Clara e Nicolas</p>
         <p class="text-muted small mb-4">Projeto Educativo SESI</p>
-        <a href="login.php" class="text-decoration-none small fw-bold mt-2 d-inline-block p-2 px-4 rounded-pill bg-light text-dark shadow-sm hover-lift" style="border: 1px solid rgba(0,0,0,0.05); transition: 0.3s;"><i class="bi bi-shield-lock-fill text-primary me-2"></i>Acesso aos Professores</a>
     </div>
 </footer>
 
